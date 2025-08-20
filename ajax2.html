@@ -16,6 +16,18 @@
     .a{
         width: 40%; margin: auto;display: flex; gap:60px;
     }
+    .txt{
+        background-color: aquamarine;
+    }
+    .js{
+        background-color: lightblue;
+    }
+    .json{
+        background-color: lightgreen;
+    }
+    .html{
+        background-color: lightcoral;
+    }
  </style>
 
 
@@ -32,68 +44,50 @@
 </div>
 
 <script>
+console.log("global this", this);
+ let jsonResults;
 
-let jobs = {
+(function loadDoc() {
+ console.log("load this", this);
+ 
+ 
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseText , this);
+        
+      document.querySelector(".txt").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "https://raw.githubusercontent.com/ShimiVi/ajaxAriel/refs/heads/main/say%20ho.text", true);
+  xhttp.send();
+  console.log("after send");
+  
+})();
 
-    a: function(){return "job a"},
-    b: function(){return "job b"},
-    c: function(){return "job c"},
-    d: function(){return "job d"},
-    e: function(callback){setTimeout(() => {callback("job e")}, 250); },
-    f: function(callback){setTimeout(() => {callback("job f")}, 1000); },
-    g: function(callback){setTimeout(() => {callback("job g")}, 5000); },
-    h: function(callback){setTimeout(() => {callback("job h")}, 2000); },  
-
+function smartLoadDoc(url, targetEl) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      targetEl.innerHTML = this.responseText;
+      //jsonResults = JSON.parse(this.responseText);
+    }
+  };
+  xhttp.open("GET", url);
+  xhttp.send();
 }
 
-function createLiWithTime(txt){
-    let d = new Date();
-    return `<li>${d.getSeconds()}:${d.getMilliseconds()} - ${txt}<li>`
-}
-
-let syncUl = document.querySelector("#ul-sync");
-document.querySelector("#btn-sync").onclick = function(){
-syncUl.innerHTML += createLiWithTime(jobs.a())
-syncUl.innerHTML += createLiWithTime(jobs.b())
-syncUl.innerHTML += createLiWithTime(jobs.c())
-syncUl.innerHTML += createLiWithTime(jobs.d())
-}
-
-let asyncUl = document.querySelector("#ul-async");
-document.querySelector("#btn-async").onclick = function(){
-jobs.e(function(msg){
-  asyncUl.innerHTML += createLiWithTime(msg);
-});
-jobs.f(function(msg){
-  asyncUl.innerHTML += createLiWithTime(msg);
-});
-jobs.g(function(msg){
-  asyncUl.innerHTML += createLiWithTime(msg);
-});
-jobs.h(function(msg){
-  asyncUl.innerHTML += createLiWithTime(msg);
-});
-}
-
-let longUl = document.querySelector("#ul-long");
-document.querySelector("#btn-long").onclick = function(){
-jobs.e(function(msg){
-  longUl.innerHTML += createLiWithTime(msg);
-
- jobs.f(function(msg){
-   longUl.innerHTML += createLiWithTime(msg);
-
-   jobs.g(function(msg){
-    longUl.innerHTML += createLiWithTime(msg);
-
-     jobs.h(function(msg){
-      longUl.innerHTML += createLiWithTime(msg);
-
-      });
-     });
-   });
-});
-}
-
+smartLoadDoc(
+    "https://raw.githubusercontent.com/ShimiVi/ajaxAriel/refs/heads/main/someDB.json",
+    document.querySelector(".json")
+);
+smartLoadDoc(
+    "https://raw.githubusercontent.com/ShimiVi/ajaxAriel/refs/heads/main/someDB.js",
+    document.querySelector(".js")
+);
+smartLoadDoc(
+    "https://raw.githubusercontent.com/ShimiVi/ajaxAriel/refs/heads/main/comp-calc.html",
+    document.querySelector(".html")
+);
 </script> 
 
