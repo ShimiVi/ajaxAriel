@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <h1>async!</h1>
+
+<style>
+    h1{
+        text-align: center;
+    }
+    .a{
+        width: 40%; margin: auto;display: flex; gap:60px;
+    }
+ </style>
+
+
+<div class="a">
+  <div class="sync">
+    <button id="btn-sync">click here</button>
+    <ul id="ul-sync"></ul>
+  </div>
+  <div class="async">
+    <button id="btn-async">click here</button>
+    <ul id="ul-async"></ul>
+  </div>
+  <div class="long">
+    <button id="btn-long">click here</button>
+    <ul id="ul-long"></ul>
+  </div>
+
+</div>
+
+<script>
+
+let jobs = {
+
+    a: function(){return "job a"},
+    b: function(){return "job b"},
+    c: function(){return "job c"},
+    d: function(){return "job d"},
+    e: function(callback){setTimeout(() => {callback("job e")}, 250); },
+    f: function(callback){setTimeout(() => {callback("job f")}, 1000); },
+    g: function(callback){setTimeout(() => {callback("job g")}, 5000); },
+    h: function(callback){setTimeout(() => {callback("job h")}, 2000); },  
+
+}
+
+function createLiWithTime(txt){
+    let d = new Date();
+    return `<li>${d.getSeconds()}:${d.getMilliseconds()} - ${txt}<li>`
+}
+
+let syncUl = document.querySelector("#ul-sync");
+document.querySelector("#btn-sync").onclick = function(){
+syncUl.innerHTML += createLiWithTime(jobs.a())
+syncUl.innerHTML += createLiWithTime(jobs.b())
+syncUl.innerHTML += createLiWithTime(jobs.c())
+syncUl.innerHTML += createLiWithTime(jobs.d())
+}
+
+let asyncUl = document.querySelector("#ul-async");
+document.querySelector("#btn-async").onclick = function(){
+jobs.e(function(msg){
+  asyncUl.innerHTML += createLiWithTime(msg);
+});
+jobs.f(function(msg){
+  asyncUl.innerHTML += createLiWithTime(msg);
+});
+jobs.g(function(msg){
+  asyncUl.innerHTML += createLiWithTime(msg);
+});
+jobs.h(function(msg){
+  asyncUl.innerHTML += createLiWithTime(msg);
+});
+}
+
+let longUl = document.querySelector("#ul-long");
+document.querySelector("#btn-long").onclick = function(){
+jobs.e(function(msg){
+  longUl.innerHTML += createLiWithTime(msg);
+
+ jobs.f(function(msg){
+   longUl.innerHTML += createLiWithTime(msg);
+
+   jobs.g(function(msg){
+    longUl.innerHTML += createLiWithTime(msg);
+
+     jobs.h(function(msg){
+      longUl.innerHTML += createLiWithTime(msg);
+
+      });
+     });
+   });
+});
+}
+
+</script> 
+
